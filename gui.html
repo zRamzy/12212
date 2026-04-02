@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>6711 Panel</title>
+    <style>
+        body {
+            background: #0f0f0f;
+            color: white;
+            font-family: Arial;
+            text-align: center;
+            margin-top: 80px;
+        }
+        input {
+            width: 220px;
+            padding: 10px;
+            margin: 5px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: white;
+        }
+        button {
+            width: 240px;
+            padding: 10px;
+            margin: 5px;
+            background: #2b2b2b;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #3b3b3b;
+        }
+        #box {
+            background: #151515;
+            width: 300px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="box">
+    <h2>6711 Login</h2>
+
+    <input id="user" placeholder="Username"><br>
+    <input id="pass" type="password" placeholder="Password"><br>
+
+    <button onclick="login()">Login</button>
+    <button onclick="register()">Register</button>
+
+    <h3 id="status">Not logged in</h3>
+    <h3 id="expiry"></h3>
+</div>
+
+<script>
+async function login() {
+    let user = document.getElementById("user").value;
+    let pass = document.getElementById("pass").value;
+
+    let r = await fetch("/login?user=" + user + "&pass=" + pass);
+    let j = await r.json();
+
+    if (j.ok) {
+        document.getElementById("status").innerText = "Login successful";
+        loadExpiry();
+    } else {
+        document.getElementById("status").innerText = "Login failed";
+    }
+}
+
+async function register() {
+    let user = document.getElementById("user").value;
+    let pass = document.getElementById("pass").value;
+
+    let r = await fetch("/register?user=" + user + "&pass=" + pass);
+    let j = await r.json();
+
+    if (j.ok) {
+        document.getElementById("status").innerText = "Registered! Now login.";
+    } else {
+        document.getElementById("status").innerText = "Register failed";
+    }
+}
+
+async function loadExpiry() {
+    let r = await fetch("/expiry");
+    let j = await r.json();
+    document.getElementById("expiry").innerText = "Expiry: " + j.expiry;
+}
+</script>
+
+</body>
+</html>
